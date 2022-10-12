@@ -13,6 +13,14 @@ foreach (var route in listRoutes)
     routes.Add(route.Trim().Substring(0, 2), int.Parse(route.Trim().Substring(2, 1)));
 }
 
+foreach (var route in routes)
+{
+    if(route.Key.Substring(0, 1) == route.Key.Substring(1, 1))
+    { 
+        Console.Write($"Invalid route: {route.Key}"); 
+    }
+}
+
 Destination Destination = new();
 Destination.GetDistances(routes);
 
