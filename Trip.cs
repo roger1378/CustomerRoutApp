@@ -1,23 +1,26 @@
 ﻿namespace CustomerRoutApp;
+using CustomerRoutApp.BusinessLogic;
 
-internal class Trip
+public class Trip: ITrip
 {
-    public void GetTrips(Dictionary<string, int> routes, int len, string start, string end, int num)
+    public string GetTrips(Dictionary<string, int> routes, int len, string start, string end)
     {
-        Util util = new();
+        string result = string.Empty;
+
+        Route route = new ();
         var mainRoutes = routes
               .Where(x => x.Key.StartsWith(start))
               .Select(x => x.Key)
               .ToList();
 
         int count = 0;
-        foreach (var route in mainRoutes)
+        foreach (var mainRoute in mainRoutes)
         {
             int trips = 0;
-            string endValueKey = route.Substring(1, 1);
+            string endValueKey = mainRoute.Substring(1, 1);
             for (int i = 0; i < len; i++)
             {
-                var nextRoute = util.GetNextRoute(routes, endValueKey);
+                var nextRoute = route.GetNextRoute(routes, endValueKey);
 
                 if (nextRoute != string.Empty)
                 {
@@ -30,7 +33,9 @@ internal class Trip
                     }
                 }
             }
+            result = count.ToString();
         }
-        Console.WriteLine($"Output #{num}: {count}");
+
+        return result;
     }
 }

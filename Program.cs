@@ -1,37 +1,30 @@
 ﻿using CustomerRoutApp;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-Console.WriteLine("Hello, World!");
+using IHost host = CreateHostBuilder(args).Build();
+using var scope = host.Services.CreateScope();
 
-Console.WriteLine("Add routes information");
-var request = Console.ReadLine();
-var listRoutes = request.Split(',');
+var services = scope.ServiceProvider;
 
-var routes = new Dictionary<string, int>();
-
-foreach (var route in listRoutes)
+try
 {
-    routes.Add(route.Trim().Substring(0, 2), int.Parse(route.Trim().Substring(2, 1)));
+    services.GetRequiredService<App>().Run(args);
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
 }
 
-foreach (var route in routes)
+static IHostBuilder CreateHostBuilder(string[] args)
 {
-    if(route.Key.Substring(0, 1) == route.Key.Substring(1, 1))
-    { 
-        Console.Write($"Invalid route: {route.Key}"); 
-    }
+    return Host.CreateDefaultBuilder(args)
+        .ConfigureServices((_, services) =>
+        {
+            services.AddSingleton<IDestinaton, Destination>();
+            services.AddSingleton<ITrip, Trip>();
+            services.AddSingleton<IShortestRoute, ShortestRoute>();
+            services.AddSingleton<IDifferentRoutes, DifferentRoutes>();
+            services.AddSingleton<App>();
+        });
 }
-
-Destination Destination = new();
-Destination.GetDistances(routes);
-
-Trip Trip = new Trip();
-Trip.GetTrips(routes, 3, "C", "C", 6);
-Trip.GetTrips(routes, 4, "A", "C", 7);
-
-LengthShortestRoute LengthShortestRoute = new();
-LengthShortestRoute.GetLengthShortestRoute(routes, "A", "C", 100, 7);
-LengthShortestRoute.GetLengthShortestRoute(routes, "B", "B", 5, 8);
-LengthShortestRoute.GetLengthShortestRoute(routes, "C", "C", 30, 9);
-
-DifferentRoutes DifferentRoutes = new();
-DifferentRoutes.GetDifferentRoutes(routes, 10, "C", "C");

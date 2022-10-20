@@ -1,12 +1,12 @@
-﻿using System;
+﻿using CustomerRoutApp.BusinessLogic;
 
 namespace CustomerRoutApp;
 
-internal class DifferentRoutes
+public class DifferentRoutes: IDifferentRoutes
 {
-    public void GetDifferentRoutes(Dictionary<string, int> routes, int len, string start, string end)
+    public string GetDifferentRoutes(Dictionary<string, int> routes, string start, string end)
     {
-        Util util = new();
+        Route objRoute = new();
         int count = 0;
 
         var mainRoutes = routes
@@ -30,7 +30,7 @@ internal class DifferentRoutes
             var nextRout = string.Empty;
             foreach (var route1 in routes)
             {
-                nextRout = util.GetNextRoute(rts, endValueKey);
+                nextRout = objRoute.GetNextRoute(rts, endValueKey);
 
                 if (nextRout != string.Empty)
                 {
@@ -38,7 +38,6 @@ internal class DifferentRoutes
 
                     endValueKey = nextRout.Substring(1, 1);
 
-                    //if (i == 0)
                     rts.Remove(nextRout);
 
                     if (endValueKey == end)
@@ -51,6 +50,6 @@ internal class DifferentRoutes
             }
         }
 
-        Console.WriteLine($"Output #10: {count}");
+        return count.ToString();
     }
 }

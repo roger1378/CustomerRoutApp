@@ -1,13 +1,15 @@
-﻿namespace CustomerRoutApp;
+﻿using System.Security.AccessControl;
 
-internal class Destination
+namespace CustomerRoutApp;
+
+public class Destination: IDestinaton
 {
-    public void GetDistances(Dictionary<string, int> routes)
+    public string GetDistances(Dictionary<string, int> routes)
     {
-        string[] arrList = new string[] { "ABC", "AD", "ADC", "AEBCD", "AED" };
+        string result = string.Empty;
+        string[] arrRoutes = new string[] { "ABC", "AD", "ADC", "AEBCD", "AED" };
 
-        int count = 1;
-        foreach (var item in arrList)
+        foreach (var item in arrRoutes)
         {
             string response = "0";
 
@@ -27,7 +29,12 @@ internal class Destination
                     }
                 }
             }
-            Console.WriteLine($"Output #{count++}: {response}");
+            if (result == string.Empty)
+                result = response;
+            else
+                result = string.Concat(result, ",", response);
         }
+
+        return result;
     }
 }

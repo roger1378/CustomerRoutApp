@@ -1,46 +1,30 @@
-﻿namespace CustomerRoutApp;
+﻿using CustomerRoutApp.BusinessLogic;
 
-internal class ShortestRoute
+namespace CustomerRoutApp;
+
+public class ShortestRoute: IShortestRoute
 {
-    public int GetShortestRoute(Dictionary<string, int> routes, string start, string end, int len)
+    public string GetLengthShortestRoute(Dictionary<string, int> routes, string start, string end)
     {
-        Util util = new();
+        Route objRoute = new();
+        var rts = new Dictionary<string, int>();
+        foreach (var route in routes)
+        {
+            rts.Add(route.Key, route.Value);
+        }
+
         int count = 9999;
 
-        var mainRoutes = routes
-              .Where(x => x.Key.StartsWith(start))
-              .Select(x => x.Key)
-              .ToList();
-
-        foreach (var route in mainRoutes)
+        for (int i = 0; i < 3; i++)
         {
-            int length = 0;
-            string endValueKey = route.Substring(1, 1);
-
-            length = routes[route];
-
-            for (int i = 0; i < len; i++)
-            {
-                var nextRoute = util.GetNextRoute(routes, endValueKey);
-
-                if (nextRoute != string.Empty)
-                {
-                    length = length + routes[nextRoute];
-
-                    endValueKey = nextRoute.Substring(1, 1);
-
-                    if (i == 0)
-                        routes.Remove(nextRoute);
-
-                    if (endValueKey == end)
-                        break;
-                }
-                else
-                    length = 9999;
-            }
+            var length = objRoute.GetShortestRoute(rts, start, end, routes.Count);
             if (length < count)
                 count = length;
         }
-        return count;
+
+        if (count == 9999)
+            count = 0;
+        
+        return count.ToString();
     }
 }
